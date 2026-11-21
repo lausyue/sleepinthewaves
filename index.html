@@ -37,6 +37,14 @@ body .type,body small,body footer small{font-family:var(--shop-font)!important}
 .buy{margin-top:.35rem}
 @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px}.catalogue #filters{display:block}.menu-group+.menu-group{margin-top:.4rem}}
 @media(max-width:500px){header{display:block}header nav{justify-content:flex-start;margin-top:.75rem}.masthead p{margin-top:1.4rem}}
+:root{--shop-font:ShopDiatype,"Helvetica Neue",Arial,sans-serif}
+body{text-transform:lowercase}
+header,main.catalogue,footer{width:66%;margin-inline:auto;padding-inline:0}
+body,header .brand,header nav a,header nav button,.menu-group button,.menu-group button:first-child,button,.item,#notice,footer .brand{font-size:.75rem;font-weight:705;letter-spacing:.047em;line-height:1.35;text-transform:lowercase}
+.grid h3,dialog .line h2{font-size:.6875rem;font-weight:683;letter-spacing:0;line-height:1.2}
+body .type,body small,body footer small,.masthead p{font-size:.6875rem;font-weight:683;letter-spacing:0;line-height:1.35}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.grid{grid-template-columns:minmax(0,1fr)}}
 </style>
 <header><div class="masthead"><span class="brand">sleepinthewaves</span><p>your order will ship within a week.</p></div><nav><a href="https://cargocollective.com/sleepinthewaves">Portfolio</a><button id="bag">Cart (0)</button></nav></header><main class="catalogue"><nav id="filters" aria-label="Shop categories"></nav><section aria-labelledby="listing"><h1 id="listing" hidden></h1><p id="empty" hidden>No items listed yet.</p><div id="grid" class="grid"></div></section></main><footer><span class="brand">sleepinthewaves</span><small>Shop preview · Prices coming soon</small></footer><dialog id="cart" aria-labelledby="cartTitle"><div class="line"><h2 id="cartTitle">Your cart</h2><button id="closeCart">Close</button></div><div id="items"></div><small>Fair collection preview · Checkout is closed.</small></dialog><div id="notice" role="status"></div>
 <script>
