@@ -62,7 +62,7 @@ const pageUrl=location.href.split('#')[0];
 document.querySelector('#product-page > a').href=pageUrl+'#shop';
 let timer;
 function addButton(id,name){const add=button('Add to cart',()=>{const full=basket[id]>=99;change(id,1);$('notice').textContent=full?'Quantity limit reached':name+' added';clearTimeout(timer);timer=setTimeout(()=>$('notice').textContent='',2000)});add.className='buy';return add}
-function display(category){$('grid').replaceChildren();$('listing').textContent=category;for(const b of $('filters').querySelectorAll('button'))b.setAttribute('aria-pressed',String(b.textContent===category));for(const [id,name,type,color,src] of products){const group=['Incense holders','Decorations'].includes(type)?'Ceramics':'Paper goods';if(category!==group&&category!==type)continue;const card=document.createElement('article');card.style.setProperty('--bg',color);card.innerHTML='<a class="frame" href="#product/'+id+'"><img alt="'+name+'" src="'+src+'"></a><h3>'+name+'</h3><div class="type">'+type+'</div>';card.querySelector('a').href=pageUrl+'#product/'+id;card.append(addButton(id,name));$('grid').append(card)}$('empty').hidden=$('grid').childElementCount>0}
+function display(category){$('grid').replaceChildren();$('listing').textContent=category;for(const b of $('filters').querySelectorAll('button'))b.setAttribute('aria-pressed',String(b.textContent===category));for(const [id,name,type,color,src] of products){const group=['Incense holders','Decorations'].includes(type)?'Ceramics':'Paper goods';if(category!==group&&category!==type)continue;const card=document.createElement('article');card.style.setProperty('--bg',color);card.innerHTML='<a class="frame" href="#product/'+id+'"><img alt="'+name+'" src="'+src+'"></a><h3>'+name+'</h3>';card.querySelector('a').href=pageUrl+'#product/'+id;card.append(addButton(id,name));$('grid').append(card)}$('empty').hidden=$('grid').childElementCount>0}
 for(const categories of [['Paper goods','Calendars','Stickers','Postcards','Masking tapes','Memo pads'],['Ceramics','Incense holders','Decorations']]){
  const group=document.createElement('div');
  group.className='menu-group';
@@ -106,8 +106,7 @@ function showPage(){
  heading.textContent=name.toLowerCase();
  heading.tabIndex=-1;
  const cover=new Image(); cover.className='cover'; cover.src=src; cover.alt=name;
- const category=document.createElement('p'); category.textContent=type.toLowerCase();
- area.replaceChildren(cover,heading,category,addButton(id,name));
+ area.replaceChildren(cover,heading,addButton(id,name));
  if(id==='a5-flip-calendar'){
    const detail=new Image(); detail.className='detail';
    detail.alt='2027 a5 flip calendar cover and illustrated monthly pages';
