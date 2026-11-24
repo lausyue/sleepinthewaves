@@ -117,7 +117,7 @@ function updateDelivery(){
  const eligible=items.length>0 && items.every(([, ,type])=>smallMailTypes.has(type));
  $('post-method').disabled=!eligible;
  if(!eligible) $('sf-method').checked=true;
- $('delivery-note').textContent=eligible ? 'hong kong post is available for this order.' : 'small mail is available for orders containing only postcards, stickers, memo pads and masking tapes.';
+ $('delivery-note').textContent=eligible ? 'hong kong post is available for this order.' : '';
 }
 function refresh(){updateDelivery();const total=Object.values(basket).reduce((sum,n)=>sum+n,0);$('bag').textContent='Cart ('+total+')';$('items').replaceChildren();$('checkout-button').disabled=!total;updateMailTotal();if(!total)$('items').textContent='Your cart is empty.';for(const [id,name,type,,src] of products){if(!basket[id])continue;const row=document.createElement('div');row.className='item';const image=new Image();image.src=src;image.alt='';const title=document.createElement('span');title.textContent=name;formatCalendarSize(title,name);title.append(document.createElement('br'),'$'+priceFor(id,type)+' each');row.append(image,title);for(const n of [-1,1]){const b=button(n<0?'−':'+',()=>{change(id,n);const target=$('items').querySelector('[data-key="'+id+n+'"]');(target&&!target.disabled?target:$('closeCart')).focus()});b.dataset.key=id+n;b.setAttribute('aria-label',(n<0?'Remove one ':'Add one ')+name);b.disabled=n>0&&basket[id]>=99;if(n>0)row.append(String(basket[id]));row.append(b)}$('items').append(row)}
  if(total){
