@@ -71,25 +71,23 @@ function priceLabel(id,type){
  const label=document.createElement('span');
  label.className='price';
  if(id==='speckled-ceramic-cups'){label.textContent='sold';return label;}
- label.textContent='$'+priceFor(id,type)+(type==='Stickers'?' · 2 for $55':'');
+ label.textContent='$'+priceFor(id,type);
  return label;
 }
 function amounts(products,basket){
- let gross=0,stickers=0;
+ let subtotal=0;
  for(const [id,,type] of products){
   const qty=basket[id]||0;
   if(!qty || id==="speckled-ceramic-cups") continue;
-  gross+=qty*priceFor(id,type);
-  if(type==='Stickers')stickers+=qty;
+  subtotal+=qty*priceFor(id,type);
  }
- const discount=5*Math.floor(stickers/2);
- return {discount,subtotal:gross-discount};
+ return subtotal;
 }
 function refresh(){const total=Object.values(basket).reduce((sum,n)=>sum+n,0);$('bag').textContent='Cart ('+total+')';$('items').replaceChildren();if(!total)$('items').textContent='Your cart is empty.';for(const [id,name,type,,src] of products){if(!basket[id])continue;const row=document.createElement('div');row.className='item';const image=new Image();image.src=src;image.alt='';const title=document.createElement('span');title.textContent=name;formatCalendarSize(title,name);title.append(document.createElement('br'),'$'+priceFor(id,type)+' each');row.append(image,title);for(const n of [-1,1]){const b=button(n<0?'−':'+',()=>{change(id,n);const target=$('items').querySelector('[data-key="'+id+n+'"]');(target&&!target.disabled?target:$('closeCart')).focus()});b.dataset.key=id+n;b.setAttribute('aria-label',(n<0?'Remove one ':'Add one ')+name);b.disabled=n>0&&basket[id]>=99;if(n>0)row.append(String(basket[id]));row.append(b)}$('items').append(row)}
  if(total){
-  const {discount,subtotal}=amounts(products,basket);
+  const subtotal=amounts(products,basket);
   const summary=document.createElement('p');
-  summary.textContent=(discount?'sticker pair savings −$'+discount+' · ':'')+'subtotal $'+subtotal;
+  summary.textContent='subtotal $'+subtotal;
   $('items').append(summary);
  }
 }
