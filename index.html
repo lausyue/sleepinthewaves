@@ -64,8 +64,8 @@ a:hover,button:not(:disabled):hover{color:var(--accent);background:transparent;t
 <form id="delivery-form">
 <fieldset><legend>delivery method</legend>
 <label><input id="sf-method" type="radio" name="delivery" value="sf-express" checked required> sf express · pay delivery fee on arrival</label>
-<label><input id="post-method" type="radio" name="delivery" value="hong-kong-post" aria-describedby="delivery-note"> hong kong post · small mail</label>
-<p id="post-rates" hidden>small letter: HK$2.40 up to 30 g or HK$3.50 up to 50 g. large letter: HK$4.30 up to 50 g.</p><p id="delivery-note" aria-live="polite"></p>
+<label><input id="post-method" type="radio" name="delivery" value="hong-kong-post" aria-describedby="delivery-note"> hong kong post · HK$8 per order</label>
+<p id="delivery-note" aria-live="polite"></p>
 </fieldset><fieldset><legend>delivery details</legend>
 <label>recipient name<input required autocomplete="shipping name" name="recipient"></label>
 <label>phone number<input required type="tel" autocomplete="shipping tel" name="phone"></label>
@@ -104,32 +104,13 @@ function amounts(products,basket){
  return subtotal;
 }
 const smallMailTypes=new Set(['Postcards','Stickers','Memo pads','Masking tapes']);
-// Enter measured unit weights by product ID and packing rules for each letter format.
-const mailUnits={};
-const letterPacking={};
-function mailFee(lines,units,packing){
- if(!lines.length || lines.some(([id])=>!(units[id]?.grams>0))) return null;
- for(const format of ['small','large']){
-   const rule=packing[format];
-   if(!rule || !(rule.grams>=0)) continue;
-   // Each capacity is the measured number of that item that fits the envelope.
-   const space=lines.reduce((sum,[id,qty])=>sum+qty/(units[id][format]||0),0);
-   if(space>1) continue;
-   const grams=lines.reduce((sum,[id,qty])=>sum+qty*units[id].grams,rule.grams);
-   if(format==='small' && grams<=30) return 2.4;
-   if(grams<=50) return format==='small'?3.5:4.3;
- }
- return null;
-}
 function updateMailTotal(){
  const subtotal=amounts(products,basket);
- const post=$('post-method').checked;
- const fee=post?mailFee(Object.entries(basket).filter(([,qty])=>qty>0),mailUnits,letterPacking):0;
- $('post-rates').hidden=!post;
- $('order-subtotal').textContent='items subtotal HK$'+subtotal+(fee===null?' · postage to be confirmed before payment':(post?' · postage HK$'+fee.toFixed(2):' · sf express fee payable on delivery')+' · fps total HK$'+(subtotal+fee).toFixed(2));
+ const post=$('post-method').checked && !$('post-method').disabled;
+ const fee=post?8:0;
+ const delivery=post?'hong kong post HK$'+fee:'sf express fee payable on delivery';
+ $('order-subtotal').textContent='items subtotal HK$'+subtotal+' · '+delivery+' · fps total HK$'+(subtotal+fee).toFixed(2);
  $('payment-subtotal').textContent=$('order-subtotal').textContent;
- $('delivery-form').querySelector('[type=submit]').disabled=fee===null;
- return fee!==null;
 }
 function updateDelivery(){
  const items=products.filter(([id])=>basket[id]>0);
@@ -220,7 +201,8 @@ $('checkout-button').onclick=()=>{ $('cart').close(); location.hash='checkout'; 
 $('delivery-form').addEventListener('change',updateMailTotal);
 $('delivery-form').onsubmit=event=>{
  event.preventDefault();
- if(updateMailTotal()) location.hash='checkout/fps';
+ updateMailTotal();
+ location.hash='checkout/fps';
 };
 $('edit-delivery').onclick=()=>{location.hash='checkout'};
 $('receipt-form').onsubmit=event=>event.preventDefault();
@@ -230,7 +212,7 @@ function showPage(){
  $('checkout-page').hidden=!checkout;
  $('payment-page').hidden=!payment;
  if(checkout||payment){
-   if(payment&&(!updateMailTotal()||!$('delivery-form').checkValidity())){location.replace(pageUrl+'#checkout');return}
+   if(payment&&!$('delivery-form').checkValidity()){location.replace(pageUrl+'#checkout');return}
    $('payment-subtotal').textContent=$('order-subtotal').textContent;
    if(!Object.values(basket).some(quantity=>quantity>0)){location.replace(pageUrl+'#shop');return}
    document.querySelector('.catalogue').hidden=true;
