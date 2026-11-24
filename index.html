@@ -63,11 +63,13 @@ a:hover,button:not(:disabled):hover{color:var(--accent);background:transparent;t
 <p>checkout preview · orders and payments are closed.</p>
 <form id="delivery-form">
 <fieldset><legend>sf express delivery</legend>
+<p>pay the delivery fee directly to sf express when your order arrives.</p>
 <label>recipient name<input required autocomplete="shipping name" name="recipient"></label>
 <label>phone number<input required type="tel" autocomplete="shipping tel" name="phone"></label>
 <label>delivery address<textarea required rows="3" autocomplete="shipping street-address" name="address" placeholder="flat, floor, building, street and district"></textarea></label>
 </fieldset><fieldset><legend>payment method</legend>
 <label><input type="radio" checked required name="payment" value="FPS"> fps (within hong kong only)</label>
+<div id="fps-payment"><p>scan the fps qr code to pay the items subtotal. delivery is charged separately.</p><p id="fps-qr-placeholder">fps qr code pending · please wait before paying.</p></div>
 <label>transaction record<input required type="file" name="receipt" accept="image/jpeg,image/png,application/pdf" aria-describedby="receipt-help"></label>
 <small id="receipt-help">choose a jpg, png or pdf. files stay on your device during this preview.</small>
 </fieldset><button type="submit" disabled>submit order</button></form></main><footer><span class="brand">sleepinthewaves</span><small>Shop preview</small></footer><dialog id="cart" aria-labelledby="cartTitle"><div class="line"><h2 id="cartTitle">Your cart</h2><button id="closeCart">Close</button></div><div id="items"></div><button id="checkout-button" type="button">checkout</button></dialog><div id="notice" role="status"></div>
